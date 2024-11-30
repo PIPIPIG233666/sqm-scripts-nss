@@ -299,7 +299,7 @@ ingress() {
 
 sqm_prepare_script() {
   if [ ! -d /sys/module/ifb ]; then
-    insmod ifb numifbs=0 2>> ${OUTPUT_TARGET} || {
+    insmod /lib/modules/$(uname -r)/ifb.ko numifbs=0 2>> ${OUTPUT_TARGET} || {
       sqm_error "Kernel module ifb failed to load"
       return 1
     }
@@ -308,7 +308,7 @@ sqm_prepare_script() {
   for module in qca_nss_qdisc act_nssmirred; do
     if [ ! -d /sys/module/$module ]; then
       sqm_log "sqm_prepare_script: loading required kernel module: $module"
-      modprobe -v $module 2>> ${OUTPUT_TARGET} || {
+      modprobe -v /lib/modules/$(uname -r)/${module}.ko 2>> ${OUTPUT_TARGET} || {
         sqm_error "Kernel module '$module' failed to load"
         return 1
       }
